@@ -1,9 +1,9 @@
 <?php
 // Database information.
-$db_name = "dinner_spinner";
+$db_name = "dinnerspinner";
 $servername = "localhost";
-$username = "username";
-$password = "password";
+$username = "root";
+$password = "";
 
 // Base URL variable.
 $base_url = "http://localhost/dinnerspinner/";
@@ -217,7 +217,22 @@ function array_orderby() {
 // Merge the two arrays so we can access all data in javascript.
 									$json_selected = array_merge($json_restaurants, $json_foods);
 									?>
-									
+									<hr>									
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="selection-box-wrapper" >
+						<div class="selection-box">
+							<div class="checkboxes">
+								<div class="wheel-selection">
+								<hr>
+									<div class="selection-wrapper">
+										<label class="selection-switch">
+											<input type="checkbox" name="sounds" value="1" id="sounds" class="restaurant-selection">
+											<span class="selection-slider round"></span>
+										</label>Äänet
+									</div>											
 								</div>
 							</div>
 						</div>
@@ -245,10 +260,15 @@ function array_orderby() {
 
 		<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 		<script src="<?php echo $base_url; ?>js/dinnerspinner-js.js"></script>
 
 		<script> var json_selected = <?php echo json_encode($json_selected); ?>	</script>
+		
+		
+
+
+
 
 	</body>
 </html>

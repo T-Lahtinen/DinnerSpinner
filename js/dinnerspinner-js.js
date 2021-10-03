@@ -126,6 +126,9 @@ $(document).ready(function(){
 			winner = label[ai];
 // Append winner info to ui.
 			$("#info-box-wrapper, .selection-boxes, .wheel-bottom").addClass("hide");
+			
+			playSound('fireworks');
+			
 			return $(".winner-box").append("Onneksi olkoon <span class='winner'>"+ winner +"</span>!");
 		}
 // Draw a slice.
@@ -204,6 +207,14 @@ $(document).ready(function(){
 	var currently_selected = '';
 
 	$(".restaurant-selection, .selection-toggle").click(function(){
+		
+		if ($(this).prop("checked") == true) {
+			let speak = 'Valitsit' + $(this).closest('.selection-wrapper').find('a').text(); 
+			speakText(speak)
+		} else {
+			playSound('no');
+		}
+		
 		currently_selected = $('input.restaurant-selection:checked').length;
 // Check if we have less than 2 items selected, in which case hide the stop button and inform the user.
 		if (currently_selected < 2) {
@@ -253,4 +264,72 @@ $(document).ready(function(){
 		});
 	}
 
+});
+
+
+
+// SOUNDS
+let enableSounds = false;
+
+$("#sounds").click(function(){	
+	if ($(this).prop("checked") == true) {
+		enableSounds = true;
+		playSound('theme');		
+	} else {		
+		enableSounds = false;
+		stopSounds();
+	}
+});
+
+var speaker = new SpeechSynthesisUtterance();
+
+function speakText(text) {
+	if (enableSounds == false) {
+		return
+	}
+	
+	speaker.text = text;
+	window.speechSynthesis.speak(speaker);
+}
+
+function playSound(sound) {
+	if (enableSounds == false) {
+		return
+	}
+	
+	switch(sound) {
+		case 'yes':
+			soundYes.play();
+			break;
+		case 'no':
+			soundNo.play();
+			break;
+		case 'theme':
+			soundTheme.play();
+			break;
+		case 'fireworks':
+			soundFireworks.play();
+			break;
+	}	
+}
+
+function stopSounds(){
+	Howler.stop();
+}
+
+var soundYes = new Howl({
+	src: ['sounds/yes.mp3']
+});
+
+var soundNo = new Howl({
+	src: ['sounds/no.mp3']
+});
+
+var soundTheme = new Howl({
+	volume: 0.3,
+	src: ['sounds/theme.mp3']
+});
+
+var soundFireworks = new Howl({
+	src: ['sounds/fireworks.mp3']
 });
