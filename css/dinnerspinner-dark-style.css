@@ -45,7 +45,7 @@ body {
 
 /* Winner styles */
 body.winner {
-	background: url("/dinnerspinner/images/fireworks.gif");
+	background: url("../images/fireworks.gif");
 }
 
 .winner .winner-box {
@@ -84,7 +84,7 @@ body.winner {
 	transform: skewY(-1.5deg);
 	background: 
 		linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)),
-		url("/dinnerspinner/images/header-bg.jpg") no-repeat center,
+		url("../images/header-bg.jpg") no-repeat center,
 		linear-gradient(var(--bg-color), #5b389b);
 	background-size: cover;
 	border-bottom: .2em solid var(--text-color);
@@ -101,7 +101,7 @@ body.winner {
 
 #info-box,
 .selection-boxes {
-	padding: 20px 30px;
+	padding: 20px 25px;
 	width: 350px;
 	background: linear-gradient(15deg, #232526 75%, #414345 100%);
 	color: var(--text-color);
@@ -121,23 +121,20 @@ body.winner {
 	align-items: center;
 }
 
-.about-text {
+.about-text,
+.sounds-info {
 	text-align: left;
 }
 
-.show-more,
-.show-less {
-	display: none;
-	margin-left: 10px;
-	filter: invert(97%) sepia(4%) saturate(1697%) hue-rotate(188deg) brightness(100%) contrast(91%);
+.sounds-wrapper {
+	display: flex;
+	align-items: center;
 }
 
-.show-more {
-	width: 10px;
-}
-
-.show-less {
-	width: 16px;
+.sounds-info {
+	margin-bottom: 1em;
+	padding-top: 1em;
+	border-top: 1px solid var(--text-color);
 }
 
 .selection-boxes {
@@ -146,12 +143,32 @@ body.winner {
 	height: 100%;
 }
 
-.checkboxes {
+.checkboxes,
+.sounds-wrapper {
 	text-align: left;
 	width: 100%;
 }
 
 /* Spinner Wheel */
+.canvas-bg-name {
+	font-size: 6em;
+	font-weight: bold;
+	font-family: var(--title-font);
+	text-shadow: 0 0 15px #000;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.dinner {
+	top: 27%;
+}
+
+.spinner {
+	top: 37%;
+}
+
 #canvas-area {
 	max-width: 600px;
 	width: 100%;
@@ -188,7 +205,7 @@ body.winner {
 }
 
 #spin {
-	padding: 3px;
+	padding: 3px 40px 3px 3px;
 	background: linear-gradient(15deg, #0083B0 75%, #00B4DB 100%);
 	color: var(--text-color);
 	color: var(--text-color);
@@ -196,7 +213,6 @@ body.winner {
 	border-radius: 25px;
 	font-size: 20px;
 	height: 50px;
-	width: 200px;
 	display: flex;
 	align-items: center;
 	box-shadow: 0px 0px 15px 0px #2a2a2a;
@@ -223,7 +239,7 @@ body.winner {
 
 .spin-icon img {
 	filter: invert(44%) sepia(92%) saturate(5903%) hue-rotate(177deg) brightness(96%) contrast(101%);
-	max-width: 20px;
+	max-width: 30px;
 }
 
 /* Info/notice messages */
@@ -291,7 +307,7 @@ div#footer a:hover {
 	align-items: center;
 	background: 
 		linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)),
-		url("/dinnerspinner/images/header-bg.jpg") no-repeat center,
+		url("../images/header-bg.jpg") no-repeat center,
 		linear-gradient(var(--bg-color), #5b389b);
 	background-size: cover;
 	background-position-y: -30em;
@@ -330,10 +346,19 @@ div#footer a:hover {
 	margin-right: 5px;
 }
 
+.created-by {
+	margin-bottom: 10px;
+}
+
 img.external-link {
 	width: 12px;
 	filter: invert(97%) sepia(4%) saturate(1697%) hue-rotate(188deg) brightness(100%) contrast(91%);
 	margin-left: 5px;
+}
+
+.music-credit {
+	display: none;
+	margin-top: 10px;
 }
 
 /* Toggle checkbox styles */
@@ -352,8 +377,7 @@ img.external-link {
 }
 
 /* Hide default HTML checkbox */
-.switch input,
-.selection-box input {
+input[type='checkbox'] {
 	opacity: 0;
 	width: 0;
 	height: 0;
@@ -462,12 +486,66 @@ input:checked + .selection-slider:before {
 	display: none;
 }
 
+/* Popup styles */
+.ui-widget.ui-widget-content {
+	background: linear-gradient(15deg, #232526 75%, #414345 100%) !important;
+	border-radius: 5px !important;
+	border: none !important;
+	box-shadow: 0px 0px 15px 0px #2a2a2a !important;
+}
+
+.help-icon {
+	display: none;
+	width: 20px;
+	margin-left: 10px;
+	filter: invert(95%) sepia(6%) saturate(305%) hue-rotate(198deg) brightness(99%) contrast(93%);
+}
+
+#about-dialog {
+	text-align: left;
+	font-family: var(--regular-font);
+	color: var(--text-color) !important;
+}
+
+.ui-widget-header {
+	background: none !important;
+	border: none !important;
+}
+
+.ui-dialog-title {
+	width: 100% !important;
+	font-family: var(--regular-font);
+	color: var(--text-color) !important;
+	font-size: 1.2em;
+}
+
+.ui-dialog-buttonpane {
+	display: flex;
+	justify-content: center;
+	border: none !important;
+	background: #232526 !important;
+}
+
+.ui-dialog-buttonpane button {
+	margin: 0 !important;
+	font-family: var(--regular-font) !important;
+	padding: .4em 2em !important;
+}
+
+.ui-icon-close {
+	background-position: -84px -128px !important;
+}
+
 /* Media Queries */
-@media only screen and (max-width: 850px) {
+@media only screen and (max-width: 1100px) {
 	body {
 		background: #bc5b3c;
 		background-size: cover;
 		animation: none;
+	}
+
+	.help-icon {
+		display: inline-block;
 	}
 }
 

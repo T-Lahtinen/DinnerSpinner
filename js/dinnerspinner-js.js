@@ -8,7 +8,7 @@ $(document).ready(function(){
 		$(".restaurant-selection").prop("checked", false);
 	}
 
-//Create the cookie functions.
+// Create the cookie functions.
 	function setCookie(cname, cvalue, exyears) {
 		const d = new Date();
 		d.setTime(d.getTime() + (exyears*365*24*60*60*1000));
@@ -103,7 +103,7 @@ $(document).ready(function(){
 		deg %= 360;
 
 // Increment speed.
-		if (!isStopped && speed<3) {
+		if (!isStopped && speed < 3) {
 			speed = speed+1 * 0.1;
 		}
 // Decrement Speed.
@@ -126,7 +126,19 @@ $(document).ready(function(){
 			winner = label[ai];
 // Append winner info to ui.
 			$("#info-box-wrapper, .selection-boxes, .wheel-bottom").addClass("hide");
-			return $(".winner-box").append("Onneksi olkoon <span class='winner'>"+ winner +"</span>!");
+			stopSounds();
+			$(".style-switch").hide();
+			if ($('input.style-toggle').is(':checked')) {
+				playSound('videogame');
+				soundVideogame.fade(0, 0.3, 1000);
+			} else {
+				playSound('fireworks');
+				playSound('winner');
+				soundWinner.fade(0, 0.3, 1000);
+			}
+			playSound('cheering');
+			speakText('Dinner Spinner has chosen' + winner + '. Congratulations!');
+			return $(".wheel-container").prepend("<h1 class='winner-box'>Onneksi olkoon <span class='winner'>"+ winner +"</span>!</h1>");
 		}
 // Draw a slice.
 		drawImg(label, color, slices, sliceDeg, speed);
@@ -139,11 +151,15 @@ $(document).ready(function(){
 
 // Stop the wheel once the button is clicked.
 	document.getElementById("spin").addEventListener("mousedown", function(){
+		soundTheme.fade(0.3, 0, 3000);
+		playSound('suspense');
+		soundSuspense.fade(0.1, 0.5, 3000);
+		$("#spin").css({transition: "3s", opacity: "0"});
 		isStopped = true;
 	}, false);
 
 // Toggle which checkbox selection should be shown.	
-	$(".selection-toggle").click(function(){
+	$(".selection-toggle").click(function() {
 		$(".selection-box-wrapper").toggle();
 
 // Set a correct cookie value and update notice text.
@@ -160,19 +176,11 @@ $(document).ready(function(){
 		}
 	});
 
-// Hide the stop button one it's been clicked.
-	$("#spin").click(function(){
-		$(".style-switch").hide();
-		$("#spin").css({transition: "3s", opacity: "0"});
-	});
-
 // Insert checked restautants in to the wheel once one is clicked.
 	$("input.restaurant-selection, .selection-toggle").on("click", function(event) {
-
 		var checkedRestaurantIDs = [];
 		var label = [];
 		var color = [];
-
 // Loop through chosen restaurants.
 		$(".restaurant-selection").each(function( index ) {
 // If checked add to array.
@@ -215,26 +223,44 @@ $(document).ready(function(){
 		};
 // Remove gif bg if we have at least 1 thing selected.
 		if (currently_selected > 0) {
-			$("#wheel").removeClass("wheel-bg");
+			$(".dinner, .spinner").hide();
 			$("#wheel").addClass("wheel-pointer");
 		} else {
-			$("#wheel").addClass("wheel-bg");
+			$(".dinner, .spinner").show();
 			$("#wheel").removeClass("wheel-pointer");
 		};
 	});
 
+// Play a sound when restaurant or food is selected.
+	$(".restaurant-selection").click(function(){
+		if ($(this).prop("checked") == true) {
+			let speak = 'You have selected' + $(this).closest('.selection-wrapper').find('.spinner-choice-name').text(); 
+			speakText(speak);
+			return;
+		} else {
+			playSound('no');
+		}
+	});
+
 // Style change.
 	$(".style-toggle").click(function() {
-
 		if ($(link).attr("href") == "css/dinnerspinner-style.css") {
 			link.setAttribute("href", "css/dinnerspinner-dark-style.css");
 			setCookie("style_css", "dark", 1000);
+			$(".dinner").removeClass("animate__zoomInDown animate__infinite");
+			$(".spinner").removeClass("animate__zoomInDown animate__infinite");
+			$(".dinner").addClass("animate__rollIn");
+			$(".spinner").addClass("animate__rollIn");
 		} else if ($(link).attr("href") == "css/dinnerspinner-dark-style.css") {
 			link.setAttribute("href", "css/dinnerspinner-style.css");
 			setCookie("style_css", "dinnerspinner", 1000);
+			$(".dinner").removeClass("animate__rollIn");
+			$(".spinner").removeClass("animate__rollIn");
+			$(".dinner").addClass("animate__zoomInDown animate__infinite");
+			$(".spinner").addClass("animate__zoomInDown animate__infinite");
 		}			
 	});
-
+	
 // Hover color for spin icon.
 	$("#spin").mouseenter(function() {
 		$(".spin-icon img").css("filter", "invert(49%) sepia(99%) saturate(1205%) hue-rotate(152deg) brightness(95%) contrast(101%)");
@@ -242,15 +268,146 @@ $(document).ready(function(){
 		$(".spin-icon img").css("filter", "invert(44%) sepia(92%) saturate(5903%) hue-rotate(177deg) brightness(96%) contrast(101%)");
 	});
 
-// By default hide "about" box on smaller screen sizes.
-	if($(window).width() < 1100){
-		$("#info-box .about-text").hide()
-		$("#info-box .show-more").show();
-// Make it so the text can be toggled shown or hidden
-		$("#info-box").click(function() {
-			$("#info-box .about-text").slideToggle();
-			$("#info-box .show-more, #info-box .show-less").toggle();
+// Popup for smaller screens.
+	$("#about-dialog").dialog({
+		autoOpen: false,
+		modal: true,
+		resizable: false,
+		draggable: false,
+		width: 370,
+		dialogClass: "no-close",
+		buttons: [{
+			text: "Sulje",
+			icon: "ui-icon-close",
+			click: function() {
+				$( this ).dialog("close");
+			}
+		}]
+	});
+
+	if ($(window).width() < 1100) {
+		$(".about").click(function() {
+			$("#about-dialog").dialog("open");
+		});
+	} else {
+		$(".about").click(function() {
+			$("#about-dialog").dialog("close"); //basically do nothing.
 		});
 	}
+
+	$(window).on('resize', function() {
+		var win = $(this);
+		if (win.width() < 1100) {
+			$(".about").click(function() {
+				$("#about-dialog").dialog("open");
+			});
+		} else {
+			$(".about").click(function() {
+				$("#about-dialog").dialog("close"); //basically do nothing.
+			});
+		}
+	});
+
+// Sounds.
+	let enableSounds = false;
+
+	$("#sounds").click(function() {	
+		if ($(this).prop("checked") == true) {
+			enableSounds = true;
+			playSound('theme');	
+			soundTheme.fade(0, 0.3, 7000);
+			$(".music-credit").show();	
+		} else {		
+			enableSounds = false;
+			stopSounds();
+			$(".music-credit").hide();	
+		}
+	});
+
+	var speaker = new SpeechSynthesisUtterance();
+
+	function speakText(text) {
+		if (enableSounds == false) {
+			return
+		} else {
+			window.speechSynthesis.cancel();
+			speaker.lang = 'en-GB';
+			speaker.volume = 1;
+			speaker.text = text;
+			window.speechSynthesis.speak(speaker);
+		}
+	}
+
+	function playSound(sound) {
+		if (enableSounds == false) {
+			return
+		}
+
+		switch(sound) {
+			case 'cheering':
+				soundCheering.play();
+				break;
+			case 'no':
+				soundNo.play();
+				break;
+			case 'theme':
+				soundTheme.play();
+				break;
+			case 'fireworks':
+				soundFireworks.play();
+				break;
+			case 'videogame':
+				soundVideogame.play();
+				break;
+			case 'suspense':
+				soundSuspense.play();
+				break;
+			case 'winner':
+				soundWinner.play();
+				break;
+		}	
+	}
+
+	function stopSounds(){
+		Howler.stop();
+	}
+
+	var soundCheering = new Howl({
+		src: ['sounds/cheering.wav'],
+		volume: 0.3
+	});
+
+	var soundNo = new Howl({
+		src: ['sounds/no.wav']
+	});
+
+	var soundTheme = new Howl({
+		volume: 0.3,
+		loop: true,
+		src: ['sounds/beach-saxophone.mp3']
+	});
+
+	var soundFireworks = new Howl({
+		src: ['sounds/fireworks.wav'],
+		volume: 0.3,
+		loop: true
+	}); 
+
+	var soundVideogame = new Howl({
+		src: ['sounds/going-bananas.mp3'],
+		volume: 0.3,
+		loop: true
+	}); 
+
+	var soundSuspense = new Howl({
+		src: ['sounds/percussion-beat-clapping.mp3'],
+		volume: 0.3
+	});
+
+	var soundWinner = new Howl({
+		src: ['sounds/fashion.mp3'],
+		volume: 0.3,
+		loop: true
+	});
 
 });

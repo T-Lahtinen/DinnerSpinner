@@ -1,3 +1,12 @@
+@font-face {
+	font-family: 'Comic Sans MS';
+	src: url("../fonts/comic-sans/comic.ttf");
+}
+
+:root {
+	--animate-duration: 4s;
+}
+
 /* HTML and Body */
 body, 
 html {
@@ -23,7 +32,7 @@ body {
 
 /* Winner styles */
 body.winner {
-	background: url("/dinnerspinner/images/winner.gif");
+	background: url("../images/winner.gif");
 	background-repeat: repeat;
 	background-size: 50%;
 }
@@ -85,27 +94,19 @@ body.winner {
 	align-items: center;
 }
 
-.about-text {
+.about-text,
+.sounds-info {
 	text-align: left;
 }
 
-.show-more,
-.show-less {
-	display: none;
-	margin-left: 10px;
-	filter: invert(98%) sepia(100%) saturate(0%) hue-rotate(343deg) brightness(103%) contrast(103%);
-}
-
-.show-more {
-	width: 10px;
-}
-
-.show-less {
-	width: 16px;
+.sounds-info {
+	margin-bottom: 1em;
+	padding-top: 1em;
+	border-top: 1px solid white;
 }
 
 .selection-boxes {
-	padding: 20px 30px;
+	padding: 20px 25px;
 	width: 350px;
 	background-color: hotpink;
 	color: white;
@@ -118,12 +119,24 @@ body.winner {
 	height: 100%;
 }
 
-.checkboxes {
+.checkboxes,
+.sounds-wrapper {
 	text-align: left;
 	width: 100%;
 }
 
 /* Spinner Wheel */
+.canvas-bg-name {
+	font-size: 6em;
+	font-weight: bold;
+	text-shadow: 0 0 30px blue;
+	position: absolute;
+	top: 32%;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
 #canvas-area {
 	max-width: 600px;
 	width: 100%;
@@ -137,12 +150,6 @@ body.winner {
 	position: relative;
 	overflow: hidden;
 	margin: 0 30px;
-}
-
-.wheel-bg {
-	background-image: url("/dinnerspinner/images/dinnerspinner.gif");
-	background-position: center;
-	background-size: contain;
 }
 
 .wheel-pointer:after {
@@ -170,7 +177,7 @@ body.winner {
 	background: chartreuse;
 	border: 3px solid purple;
 	color: tomato;
-	font-family: "Comic Sans MS", Arial, Helvetica, sans-serif;
+	font-family: "Comic Sans MS", Arial, sans-serif;
 	border-radius: 10px;
 	transition: 0.5s;
 	font-size: 20px;
@@ -180,7 +187,7 @@ body.winner {
 	background: tomato;
 	border: 3px solid mediumaquamarine;
 	color: chartreuse;
-	font-family: "Comic Sans MS", Arial, Helvetica, sans-serif;
+	font-family: "Comic Sans MS", Arial, sans-serif;
 	font-weight: bold;
 	transition: 0.5s;
 	cursor: pointer;
@@ -283,10 +290,19 @@ div#footer a:hover {
 	margin-right: 5px;
 }
 
+.copyright-stamp,
+.created-by {
+	margin-bottom: 10px;
+}
+
 img.external-link {
 	width: 12px;
 	filter: invert(98%) sepia(100%) saturate(0%) hue-rotate(343deg) brightness(103%) contrast(103%);
 	margin-left: 5px;
+}
+
+.music-credit {
+	display: none;
 }
 
 /* Toggle checkbox styles */
@@ -305,8 +321,7 @@ img.external-link {
 }
 
 /* Hide default HTML checkbox */
-.switch input,
-.selection-box input {
+input[type='checkbox'] {
 	opacity: 0;
 	width: 0;
 	height: 0;
@@ -415,7 +430,62 @@ input:checked + .selection-slider:before {
 	display: none;
 }
 
+/* Popup styles */
+.ui-widget.ui-widget-content {
+	background: hotpink !important;
+	border-radius: 5px !important;
+	border: 3px solid white !important;
+}
+
+.help-icon {
+	display: none;
+	width: 20px;
+	margin-left: 10px;
+	filter: invert(95%) sepia(6%) saturate(305%) hue-rotate(198deg) brightness(99%) contrast(93%);
+}
+
+#about-dialog {
+	text-align: left;
+	font-family: "Comic Sans MS", Arial, sans-serif;
+	color: white !important;
+}
+
+.ui-widget-header {
+	background: none !important;
+	border: none !important;
+}
+
+.ui-dialog-title {
+	width: 100% !important;
+	font-family: "Comic Sans MS", Arial, sans-serif;
+	color: white !important;
+	font-size: 1.2em;
+}
+
+.ui-dialog-buttonpane {
+	display: flex;
+	justify-content: center;
+	border: none !important;
+	background: hotpink !important;
+}
+
+.ui-dialog-buttonpane button {
+	margin: 0 !important;
+	font-family: "Comic Sans MS", Arial, sans-serif !important;
+	padding: .4em 2em !important;
+}
+
+.ui-icon-close {
+	background-position: -84px -128px !important;
+}
+
 /* Media Queries */
+@media only screen and (max-width: 1100px) {
+	.help-icon {
+		display: inline-block;
+	}
+}
+
 @media only screen and (max-width: 480px) {
 	.notice-message {
 		flex-direction: column;
