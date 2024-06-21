@@ -1,6 +1,6 @@
 # Dinner Spinner
 
-A project we made because the name was funny. Also because people at the workplace couldn't ever decide where to lunch.
+A project we made because the name was funny. Also because people at the workplace we couldn't ever decide where to lunch.
 
 Made with PHP, HTML, CSS, Javascript & jQuery.
 
